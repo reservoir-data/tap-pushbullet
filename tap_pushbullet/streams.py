@@ -210,7 +210,7 @@ class Devices(PushbulletStream):
         ),
         Property(
             "generated_nickname",
-            th.StringType,
+            th.BooleanType,
             description=(
                 "`true` if the nickname was automatically generated from the "
                 "`manufacturer` and `model` fields (only used for some android phones)"
