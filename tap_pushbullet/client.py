@@ -4,7 +4,6 @@ from __future__ import annotations
 
 from typing import Any
 
-import requests
 from singer_sdk import RESTStream
 from singer_sdk.authenticators import APIKeyAuthenticator
 
@@ -59,30 +58,8 @@ class PushbulletStream(RESTStream):
             Mapping of URL query parameters.
         """
         params: dict = {
-            "cursor": None,
+            "cursor": next_page_token,
             "limit": self.PAGE_SIZE,
             "modified_after": self.get_starting_replication_key_value(context),
         }
         return params
-
-    def get_next_page_token(
-        self,
-        response: requests.Response,
-        previous_token: str | None,
-    ) -> str | None:
-        """Get the next page token.
-
-        Args:
-            response: The response object.
-            previous_token: The previous page token.
-
-        Returns:
-            The next page token.
-        """
-        token = super().get_next_page_token(response, previous_token)
-
-        # Stop pagination if a loop is detected
-        if token == previous_token:
-            return None
-
-        return token
