@@ -2,10 +2,25 @@
 
 from __future__ import annotations
 
-from typing import Any
+from datetime import datetime
+from typing import Any, Generator
 
+import backoff
+import requests
 from singer_sdk import RESTStream
 from singer_sdk.authenticators import APIKeyAuthenticator
+from singer_sdk.exceptions import RetriableAPIError
+
+
+def _get_wait_time_from_response(
+    exception: RetriableAPIError | requests.RequestException,
+) -> float:
+    reset = exception.response.headers.get("X-Ratelimit-Reset")
+    if reset:
+        wait_time = float(reset) - datetime.now().timestamp()
+        return max(wait_time, 0)
+
+    return 0
 
 
 class PushbulletStream(RESTStream):
@@ -63,3 +78,11 @@ class PushbulletStream(RESTStream):
             "modified_after": self.get_starting_replication_key_value(context),
         }
         return params
+
+    def backoff_wait_generator(self) -> Generator[int, None, None]:
+        """Get a backoff wait generator.
+
+        Returns:
+            A backoff wait generator.
+        """
+        return backoff.runtime(value=_get_wait_time_from_response)
