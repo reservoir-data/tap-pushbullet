@@ -7,9 +7,12 @@ from typing import Any, Generator
 
 import backoff
 import requests
+from requests_cache import install_cache
 from singer_sdk import RESTStream
 from singer_sdk.authenticators import APIKeyAuthenticator
 from singer_sdk.exceptions import RetriableAPIError
+
+install_cache("tap_pushbullet_cache", backend="sqlite", expire_after=3600)
 
 
 def _get_wait_time_from_response(
