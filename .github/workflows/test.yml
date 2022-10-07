@@ -10,7 +10,12 @@ jobs:
       PIP_CONSTRAINT: .github/workflows/constraints.txt
     strategy:
       matrix:
-        python-version: ["3.10"]
+        include:
+        - {python-version: "3.10", session: "lint"}
+        - {python-version: "3.10", session: "pytest"}
+        - {python-version: "3.9", session: "pytest"}
+        - {python-version: "3.8", session: "pytest"}
+        - {python-version: "3.7", session: "pytest"}
 
     steps:
     - name: Checkout code
@@ -38,5 +43,7 @@ jobs:
         tox --version
 
     - name: Run lint command from tox.ini
+      env:
+        TAP_PUSHBULLET_API_KEY: ${{ secrets.TAP_PUSHBULLET_API_KEY }}
       run: |
         tox -e lint
