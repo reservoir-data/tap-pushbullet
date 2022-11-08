@@ -12,7 +12,7 @@
             "program": "tap_pushbullet",
             "args": [
                 "--config",
-                ".secrets/config.json",
+                "ENV",
             ],
         },
     ]

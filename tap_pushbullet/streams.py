@@ -18,48 +18,20 @@ class Property(th.Property):
 
     def __init__(
         self,
-        name: str,
-        wrapped: W | type[W],
-        required: bool = False,
-        default: Any = None,  # noqa: ANN401
-        description: str = None,
-        example: Any = None,  # noqa: ANN401
-        enum: list[Any] = None,
+        *args: Any,
+        example: Any | None = None,
+        **kwargs: Any,
     ) -> None:
         """Initialize Property object.
 
         Args:
-            name: Property name.
-            wrapped: JSON Schema type of the property.
-            required: Whether this is a required property.
-            default: Default value in the JSON Schema.
-            description: Long-text property description.
+            *args: Positional arguments passed to super().
             example: Example value in the JSON Schema.
-            enum: Enumerated values in the JSON Schema.
+            **kwargs: Additional keyword arguments passed to super().
         """
-        super().__init__(
-            name,
-            wrapped,
-            required=required,
-            default=default,
-            description=description,
-        )
-        self.example = example
-        self.enum = enum
-
-    def to_dict(self) -> dict:
-        """Convert to a dictionary.
-
-        Returns:
-            A dictionary representation of the field.
-        """
-        result = super().to_dict()
-        result[self.name]["example"] = self.example
-
-        if self.enum:
-            result[self.name]["enum"] = self.enum
-
-        return result
+        examples = kwargs.pop("examples", None)
+        kwargs["examples"] = examples or ([example] if example else None)
+        super().__init__(*args, **kwargs)
 
 
 IDEN_FIELD = Property(
@@ -102,7 +74,9 @@ class EmailField(Property):
 
     DESCRIPTION = "Email address of the person"
 
-    def __init__(self, name: str, required: bool = False, default: str = None) -> None:
+    def __init__(
+        self, name: str, required: bool = False, default: str | None = None
+    ) -> None:
         """Initialize an EmailField.
 
         Args:
@@ -166,7 +140,7 @@ class Chats(PushbulletStream):
                     th.StringType,
                     description='`"email"` or `"user"`',
                     example="user",
-                    enum=["email", "user"],
+                    allowed_values=["email", "user"],
                 ),
                 Property(
                     "name",
@@ -201,6 +175,7 @@ class Devices(PushbulletStream):
                 'Commonly used values are: "desktop", "browser", "website", '
                 '"laptop", "tablet", "phone", "watch", "system"'
             ),
+            examples=["ios"],
         ),
         Property(
             "nickname",
@@ -294,7 +269,7 @@ class Pushes(PushbulletStream):
             th.StringType,
             description='Type of the push, one of `"note"`, `"file"`, `"link"`.',
             example="note",
-            enum=["note", "file", "link"],
+            allowed_values=["note", "file", "link"],
         ),
         Property(
             "dismissed",
@@ -322,7 +297,7 @@ class Pushes(PushbulletStream):
                 '`"incoming"`'
             ),
             example="self",
-            enum=["self", "outgoing", "incoming"],
+            allowed_values=["self", "outgoing", "incoming"],
         ),
         Property(
             "sender_iden",
@@ -446,6 +421,24 @@ class Pushes(PushbulletStream):
             example=484,
         ),
     ).to_dict()
+
+    def get_url_params(
+        self,
+        context: dict | None,
+        next_page_token: str | None,
+    ) -> dict[str, Any]:
+        """Return a dictionary of values to be used in URL parameterization.
+
+        Args:
+            context: Stream context.
+            next_page_token: Token for the next page, if any.
+
+        Returns:
+            A mapping of URL parameter names to values.
+        """
+        params = super().get_url_params(context, next_page_token)
+        params["active"] = "true"
+        return params
 
 
 class Subscriptions(PushbulletStream):
