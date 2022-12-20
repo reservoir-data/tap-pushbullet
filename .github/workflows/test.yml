@@ -39,7 +39,6 @@ jobs:
     - name: Install tox
       run: |
         pipx install tox
-        pipx inject tox tox-poetry
         tox --version
 
     - name: Run ${{ matrix.session }} session
