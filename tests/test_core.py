@@ -5,7 +5,6 @@ from __future__ import annotations
 from typing import Any
 
 from singer_sdk.testing import get_standard_tap_tests
-
 from tap_pushbullet.tap import TapPushbullet
 
 SAMPLE_CONFIG: dict[str, Any] = {}

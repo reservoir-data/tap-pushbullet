@@ -75,7 +75,11 @@ class EmailField(Property):
     DESCRIPTION = "Email address of the person"
 
     def __init__(
-        self, name: str, required: bool = False, default: str | None = None
+        self,
+        name: str,
+        *,
+        required: bool = False,
+        default: str | None = None,
     ) -> None:
         """Initialize an EmailField.
 

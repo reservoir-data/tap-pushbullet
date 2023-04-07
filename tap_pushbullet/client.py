@@ -2,17 +2,19 @@
 
 from __future__ import annotations
 
-from datetime import datetime
-from typing import Any, Generator
+from datetime import datetime, timezone
+from typing import TYPE_CHECKING, Any, Generator
 
 import backoff
-import requests
 from requests_cache import install_cache
 from singer_sdk import RESTStream
 from singer_sdk.authenticators import APIKeyAuthenticator
-from singer_sdk.exceptions import RetriableAPIError
 from singer_sdk.helpers.jsonpath import extract_jsonpath
 from singer_sdk.pagination import JSONPathPaginator, first
+
+if TYPE_CHECKING:
+    import requests
+    from singer_sdk.exceptions import RetriableAPIError
 
 install_cache("tap_pushbullet_cache", backend="sqlite", expire_after=3600)
 
@@ -23,7 +25,7 @@ def _get_wait_time_from_response(exception: RetriableAPIError) -> float:
 
     reset = exception.response.headers.get("X-Ratelimit-Reset")
     if reset:
-        wait_time = float(reset) - datetime.now().timestamp()
+        wait_time = float(reset) - datetime.now(tz=timezone.utc).timestamp()
         return max(wait_time, 0)
 
     return 0
@@ -71,7 +73,7 @@ class PushbulletStream(RESTStream):
     """Pushbullet stream class."""
 
     url_base = "https://api.pushbullet.com"
-    next_page_token_jsonpath = "$.cursor"
+    next_page_token_jsonpath = "$.cursor"  # noqa: S105
     primary_keys = ["iden"]
 
     PAGE_SIZE = 100

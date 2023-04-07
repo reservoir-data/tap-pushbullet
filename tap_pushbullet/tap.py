@@ -2,11 +2,16 @@
 
 from __future__ import annotations
 
+import typing as t
+
 from singer_sdk import Stream, Tap
 from singer_sdk import typing as th
-from singer_sdk.streams import RESTStream
 
 from tap_pushbullet.streams import Chats, Devices, Pushes, Subscriptions
+
+if t.TYPE_CHECKING:
+    from singer_sdk.streams import RESTStream
+
 
 STREAM_TYPES: list[type[RESTStream]] = [Chats, Devices, Pushes, Subscriptions]
 
