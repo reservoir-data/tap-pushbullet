@@ -1,17 +1,22 @@
 name: Test tap-pushbullet
 
-on: [push]
+on:
+  push:
+    branches:
+      - main
+  pull_request:
 
 jobs:
-  linting:
+  tests:
     runs-on: ubuntu-latest
     env:
-      SETUPTOOLS_USE_DISTUTILS: stdlib
+      NOXSESSION: ${{ matrix.session }}-${{ matrix.python-version }}
       PIP_CONSTRAINT: .github/workflows/constraints.txt
+      FORCE_COLOR: "1"
     strategy:
       matrix:
         include:
-        - {python-version: "3.10", session: "mypy"}
+        - {python-version: "3.11", session: "pytest"}
         - {python-version: "3.10", session: "pytest"}
         - {python-version: "3.9", session: "pytest"}
         - {python-version: "3.8", session: "pytest"}
@@ -36,13 +41,14 @@ jobs:
         pipx install poetry
         poetry --version
 
-    - name: Install tox
+    - name: Install Nox
       run: |
-        pipx install tox
-        tox --version
+        pipx install nox
+        pipx inject nox nox-poetry
+        nox --version
 
-    - name: Run ${{ matrix.session }} session
+    - name: Run Nox
       env:
         TAP_PUSHBULLET_API_KEY: ${{ secrets.TAP_PUSHBULLET_API_KEY }}
       run: |
-        tox -e ${{ matrix.session }}
+        nox
