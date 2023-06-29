@@ -2,8 +2,8 @@
 
 from __future__ import annotations
 
+import typing as t
 from datetime import datetime, timezone
-from typing import TYPE_CHECKING, Any, Generator
 
 import backoff
 from requests_cache import install_cache
@@ -12,7 +12,7 @@ from singer_sdk.authenticators import APIKeyAuthenticator
 from singer_sdk.helpers.jsonpath import extract_jsonpath
 from singer_sdk.pagination import JSONPathPaginator, first
 
-if TYPE_CHECKING:
+if t.TYPE_CHECKING:
     import requests
     from singer_sdk.exceptions import RetriableAPIError
 
@@ -38,8 +38,8 @@ class PushbulletPaginator(JSONPathPaginator):
         self,
         jsonpath: str,
         records_jsonpath: str,
-        *args: Any,
-        **kwargs: Any,
+        *args: t.Any,
+        **kwargs: t.Any,
     ) -> None:
         """Initialize a Pushbullet paginator.
 
@@ -74,7 +74,7 @@ class PushbulletStream(RESTStream):
 
     url_base = "https://api.pushbullet.com"
     next_page_token_jsonpath = "$.cursor"  # noqa: S105
-    primary_keys = ["iden"]
+    primary_keys = ("iden",)
 
     PAGE_SIZE = 100
 
@@ -100,15 +100,13 @@ class PushbulletStream(RESTStream):
         Returns:
             A dictionary of HTTP headers.
         """
-        headers = {}
-        headers["User-Agent"] = f"{self.tap_name}/{self._tap.plugin_version}"
-        return headers
+        return {"User-Agent": f"{self.tap_name}/{self._tap.plugin_version}"}
 
     def get_url_params(
         self,
         context: dict | None,
         next_page_token: str | None,
-    ) -> dict[str, Any]:
+    ) -> dict[str, t.Any]:
         """Get URL query parameters.
 
         Args:
@@ -125,7 +123,7 @@ class PushbulletStream(RESTStream):
         }
         return params
 
-    def backoff_wait_generator(self) -> Generator[float, None, None]:
+    def backoff_wait_generator(self) -> t.Generator[float, None, None]:
         """Get a backoff wait generator.
 
         Returns:
