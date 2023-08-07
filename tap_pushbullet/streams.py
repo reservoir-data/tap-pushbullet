@@ -19,7 +19,7 @@ class Property(th.Property):
     def __init__(
         self,
         *args: Any,
-        example: Any | None = None,
+        example: Any | None = None,  # noqa: ANN401
         **kwargs: Any,
     ) -> None:
         """Initialize Property object.
