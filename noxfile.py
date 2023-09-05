@@ -23,7 +23,7 @@ package = "tap-pushbullet"
 src_dir = "tap_pushbullet"
 tests_dir = "tests"
 
-python_versions = ["3.11", "3.10", "3.9", "3.8", "3.7"]
+python_versions = ["3.11", "3.10", "3.9", "3.8"]
 main_python_version = "3.10"
 locations = src_dir, tests_dir, "noxfile.py"
 nox.options.sessions = (
