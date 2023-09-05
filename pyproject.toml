@@ -22,17 +22,6 @@ singer-sdk = "~=0.31.1"
 [tool.poetry.dev-dependencies]
 singer-sdk = { version = "*", extras = ["testing"] }
 
-[tool.isort]
-profile = "black"
-multi_line_output = 3 # Vertical Hanging Indent
-use_parentheses = true
-include_trailing_comma = true
-src_paths = "tap_pushbullet"
-known_first_party = "tap_pushbullet"
-add_imports = [
-  "from __future__ import annotations",
-]
-
 [tool.pytest.ini_options]
 addopts = "-vvv"
 
@@ -45,11 +34,11 @@ ignore_missing_imports = true
 module = ["backoff.*"]
 
 [build-system]
+build-backend = "poetry.core.masonry.api"
 requires = [
-  "poetry-core>=1,<2",
+  "poetry-core<2,>=1",
   "poetry-dynamic-versioning",
 ]
-build-backend = "poetry.core.masonry.api"
 
 [tool.poetry.scripts]
 # CLI declaration
