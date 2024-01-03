@@ -2,9 +2,25 @@ name: Test tap-pushbullet
 
 on:
   push:
-    branches:
-      - main
+    branches: [main]
+    paths:
+    - tap_pushbullet/**
+    - tests/**
+    - noxfile.py
+    - poetry.lock
+    - pyproject.toml
+    - .github/workflows/test.yml
+    - .github/workflows/constraints.txt
   pull_request:
+    types: [opened, synchronize, reopened]
+    paths:
+    - tap_pushbullet/**
+    - tests/**
+    - noxfile.py
+    - poetry.lock
+    - pyproject.toml
+    - .github/workflows/test.yml
+    - .github/workflows/constraints.txt
 
 jobs:
   tests:
