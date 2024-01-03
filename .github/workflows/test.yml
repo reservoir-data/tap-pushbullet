@@ -2,9 +2,25 @@ name: Test tap-pushbullet
 
 on:
   push:
-    branches:
-      - main
+    branches: [main]
+    paths:
+    - tap_pushbullet/**
+    - tests/**
+    - noxfile.py
+    - poetry.lock
+    - pyproject.toml
+    - .github/workflows/test.yml
+    - .github/workflows/constraints.txt
   pull_request:
+    types: [opened, synchronize, reopened]
+    paths:
+    - tap_pushbullet/**
+    - tests/**
+    - noxfile.py
+    - poetry.lock
+    - pyproject.toml
+    - .github/workflows/test.yml
+    - .github/workflows/constraints.txt
 
 jobs:
   tests:
@@ -24,10 +40,10 @@ jobs:
 
     steps:
     - name: Checkout code
-      uses: actions/checkout@v4.1.1
+      uses: actions/checkout@v4
 
     - name: Set up Python ${{ matrix.python-version }}
-      uses: actions/setup-python@v4.7.1
+      uses: actions/setup-python@v5
       with:
         python-version: ${{ matrix.python-version }}
 
