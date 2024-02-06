@@ -9,11 +9,8 @@ import backoff
 from requests_cache import install_cache
 from singer_sdk import RESTStream
 from singer_sdk.authenticators import APIKeyAuthenticator
-from singer_sdk.helpers.jsonpath import extract_jsonpath
-from singer_sdk.pagination import JSONPathPaginator, first
 
 if t.TYPE_CHECKING:
-    import requests
     from singer_sdk.exceptions import RetriableAPIError
 
 install_cache("tap_pushbullet_cache", backend="sqlite", expire_after=3600)
@@ -29,44 +26,6 @@ def _get_wait_time_from_response(exception: RetriableAPIError) -> float:
         return max(wait_time, 0)
 
     return 0
-
-
-class PushbulletPaginator(JSONPathPaginator):
-    """Pushbullet API paginator."""
-
-    def __init__(
-        self,
-        jsonpath: str,
-        records_jsonpath: str,
-        *args: t.Any,
-        **kwargs: t.Any,
-    ) -> None:
-        """Initialize a Pushbullet paginator.
-
-        Args:
-            jsonpath: JSONPath expression to find the records.
-            records_jsonpath: JSONPath expression to find the records.
-            *args: Positional arguments to pass to the parent class.
-            **kwargs: Keyword arguments to pass to the parent class.
-        """
-        super().__init__(jsonpath, *args, **kwargs)
-        self.records_jsonpath = records_jsonpath
-
-    def has_more(self, response: requests.Response) -> bool:
-        """Return a boolean indicating whether there are more pages.
-
-        Args:
-            response: The response object.
-
-        Returns:
-            A boolean indicating whether there are more pages.
-        """
-        try:
-            first(extract_jsonpath(self.records_jsonpath, response.json()))
-        except StopIteration:
-            return False
-
-        return True
 
 
 class PushbulletStream(RESTStream):
@@ -130,11 +89,3 @@ class PushbulletStream(RESTStream):
             A backoff wait generator.
         """
         return backoff.runtime(value=_get_wait_time_from_response)
-
-    def get_new_paginator(self) -> PushbulletPaginator:
-        """Get a new paginator.
-
-        Returns:
-            A new Pushbullet paginator.
-        """
-        return PushbulletPaginator(self.next_page_token_jsonpath, self.records_jsonpath)
