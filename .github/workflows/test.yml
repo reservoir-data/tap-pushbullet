@@ -27,7 +27,7 @@ jobs:
     runs-on: ubuntu-latest
     env:
       NOXSESSION: ${{ matrix.session }}-${{ matrix.python-version }}
-      PIP_CONSTRAINT: .github/workflows/constraints.txt
+      PIP_CONSTRAINT: ${{ github.workspace }}/.github/workflows/constraints.txt
       FORCE_COLOR: "1"
     strategy:
       matrix:
