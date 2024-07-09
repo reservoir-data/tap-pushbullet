@@ -22,6 +22,9 @@ on:
     - .github/workflows/test.yml
     - .github/workflows/constraints.txt
 
+env:
+  FORCE_COLOR: "1"
+
 jobs:
   tests:
     runs-on: ubuntu-latest
@@ -32,11 +35,12 @@ jobs:
     strategy:
       matrix:
         include:
+        - {python-version: "3.13", session: "tests"}
         - {python-version: "3.12", session: "tests"}
         - {python-version: "3.11", session: "tests"}
         - {python-version: "3.10", session: "tests"}
-        - {python-version: "3.9", session: "tests"}
-        - {python-version: "3.8", session: "tests"}
+        - {python-version: "3.9",  session: "tests"}
+        - {python-version: "3.8",  session: "tests"}
 
     steps:
     - name: Checkout code
@@ -46,6 +50,9 @@ jobs:
       uses: actions/setup-python@v5
       with:
         python-version: ${{ matrix.python-version }}
+        allow-prereleases: true
+        cache: pip
+        cache-dependency-path: poetry.lock
 
     - name: Upgrade pip
       run: |
@@ -67,4 +74,4 @@ jobs:
       env:
         TAP_PUSHBULLET_API_KEY: ${{ secrets.TAP_PUSHBULLET_API_KEY }}
       run: |
-        nox
+        nox --verbose

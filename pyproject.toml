@@ -12,6 +12,14 @@ description = "`tap-pushbullet` is a Singer tap for Pushbullet, built with the M
 authors = [
   "Edgar Ramírez-Mondragón <edgarrm358@gmail.com>",
 ]
+classifiers = [
+  "Programming Language :: Python :: 3.8",
+  "Programming Language :: Python :: 3.9",
+  "Programming Language :: Python :: 3.10",
+  "Programming Language :: Python :: 3.11",
+  "Programming Language :: Python :: 3.12",
+  "Programming Language :: Python :: 3.13",
+]
 keywords = [
   "ELT",
   "singer.io",
@@ -25,6 +33,7 @@ documentation = "https://github.com/edgarrmondragon/tap-pushbullet#readme"
 
 [tool.poetry.dependencies]
 python = ">=3.8"
+cffi = { version = ">=1.17.0rc1", python = ">=3.13" }
 requests-cache = ">=1.1.0,<2"
 singer-sdk = "~=0.38.0"
 
@@ -89,6 +98,9 @@ lint.isort.known-first-party = [
 ]
 lint.mccabe.max-complexity = 5
 lint.pydocstyle.convention = "google"
+
+[tool.pyproject-fmt]
+max_supported_python = "3.13"
 
 [tool.pytest.ini_options]
 addopts = "-vvv"
