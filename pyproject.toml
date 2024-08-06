@@ -8,7 +8,7 @@ requires = [
 [tool.poetry]
 name = "tap-pushbullet"
 version = "0.0.0"
-description = "`tap-pushbullet` is a Singer tap for Pushbullet, built with the Meltano SDK for Singer Taps."
+description = "Singer tap for Pushbullet, built with the Meltano SDK for Singer Taps."
 authors = [
   "Edgar Ramírez-Mondragón <edgarrm358@gmail.com>",
 ]
