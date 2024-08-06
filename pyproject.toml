@@ -33,7 +33,6 @@ documentation = "https://github.com/edgarrmondragon/tap-pushbullet#readme"
 
 [tool.poetry.dependencies]
 python = ">=3.8"
-cffi = { version = ">=1.17.0rc1", python = ">=3.13" }
 requests-cache = ">=1.1.0,<2"
 singer-sdk = "~=0.39.0"
 
