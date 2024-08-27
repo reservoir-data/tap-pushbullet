@@ -2,15 +2,18 @@
 
 from __future__ import annotations
 
-from typing import Any, TypeVar
+import typing as t
 
 from singer_sdk import typing as th
 
 from tap_pushbullet.client import PushbulletStream
 
+if t.TYPE_CHECKING:
+    from singer_sdk.helpers.types import Context
+
 __all__ = ["Chats", "Devices", "Pushes", "Subscriptions"]
 
-W = TypeVar("W", bound=th.JSONTypeHelper)
+W = t.TypeVar("W", bound=th.JSONTypeHelper)
 
 
 class Property(th.Property):
@@ -18,9 +21,9 @@ class Property(th.Property):
 
     def __init__(
         self,
-        *args: Any,
-        example: Any | None = None,  # noqa: ANN401
-        **kwargs: Any,
+        *args: t.Any,
+        example: t.Any | None = None,  # noqa: ANN401
+        **kwargs: t.Any,
     ) -> None:
         """Initialize Property object.
 
@@ -428,9 +431,9 @@ class Pushes(PushbulletStream):
 
     def get_url_params(
         self,
-        context: dict | None,
+        context: Context | None,
         next_page_token: str | None,
-    ) -> dict[str, Any]:
+    ) -> dict[str, t.Any]:
         """Return a dictionary of values to be used in URL parameterization.
 
         Args:
