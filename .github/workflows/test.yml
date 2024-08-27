@@ -7,8 +7,8 @@ on:
     - tap_pushbullet/**
     - tests/**
     - noxfile.py
-    - poetry.lock
     - pyproject.toml
+    - uv.lock
     - .github/workflows/test.yml
     - .github/workflows/constraints.txt
   pull_request:
@@ -17,8 +17,8 @@ on:
     - tap_pushbullet/**
     - tests/**
     - noxfile.py
-    - poetry.lock
     - pyproject.toml
+    - uv.lock
     - .github/workflows/test.yml
     - .github/workflows/constraints.txt
 
@@ -30,8 +30,6 @@ jobs:
     runs-on: ubuntu-latest
     env:
       NOXSESSION: ${{ matrix.session }}-${{ matrix.python-version }}
-      PIP_CONSTRAINT: ${{ github.workspace }}/.github/workflows/constraints.txt
-      FORCE_COLOR: "1"
     strategy:
       matrix:
         include:
@@ -43,31 +41,14 @@ jobs:
         - {python-version: "3.8",  session: "tests"}
 
     steps:
-    - name: Checkout code
-      uses: actions/checkout@v4
-
-    - name: Set up Python ${{ matrix.python-version }}
-      uses: actions/setup-python@v5
+    - uses: actions/checkout@v4
+    - uses: actions/setup-python@v5
       with:
         python-version: ${{ matrix.python-version }}
         allow-prereleases: true
-        cache: pip
-        cache-dependency-path: poetry.lock
-
-    - name: Upgrade pip
-      run: |
-        pip install pip
-        pip --version
-
-    - name: Install Poetry
-      run: |
-        pipx install poetry
-        poetry --version
-
-    - name: Install Nox
-      run: |
-        pipx install nox
-        pipx inject nox nox-poetry
+    - uses: hynek/setup-cached-uv@v2
+    - run: |
+        uv tool install nox
         nox --version
 
     - name: Run Nox

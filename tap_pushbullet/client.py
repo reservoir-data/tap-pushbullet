@@ -15,6 +15,7 @@ from singer_sdk.pagination import JSONPathPaginator, first
 if t.TYPE_CHECKING:
     import requests
     from singer_sdk.exceptions import RetriableAPIError
+    from singer_sdk.helpers.types import Context
 
 install_cache("tap_pushbullet_cache", backend="sqlite", expire_after=3600)
 
@@ -104,7 +105,7 @@ class PushbulletStream(RESTStream):
 
     def get_url_params(
         self,
-        context: dict | None,
+        context: Context | None,
         next_page_token: str | None,
     ) -> dict[str, t.Any]:
         """Get URL query parameters.

@@ -40,23 +40,20 @@ tap-pushbullet --config CONFIG --discover > ./catalog.json
 
 ### Initialize your Development Environment
 
-```bash
-pipx install poetry
-poetry install
-```
+Install [`uv`](https://docs.astral.sh/uv/getting-started/installation/) if you haven't already.
 
 ### Create and Run Tests
 
 Create tests within the `tests` subfolder and then run:
 
 ```bash
-poetry run pytest
+uv run pytest
 ```
 
-You can also test the `tap-pushbullet` CLI interface directly using `poetry run`:
+You can also test the `tap-pushbullet` CLI interface directly using `uv run`:
 
 ```bash
-poetry run tap-pushbullet --help
+uv run tap-pushbullet --help
 ```
 
 ### Testing with [Meltano](https://www.meltano.com)
@@ -71,7 +68,11 @@ Next, install Meltano (if you haven't already) and any needed plugins:
 
 ```bash
 # Install meltano
-pipx install meltano
+uv tool install meltano
+
+# Configure the backend to use `uv`
+meltano config meltano set venv.backend uv
+
 # Initialize meltano within this directory
 cd tap-pushbullet
 meltano install
@@ -82,8 +83,9 @@ Now you can test and orchestrate using Meltano:
 ```bash
 # Test invocation:
 meltano invoke tap-pushbullet --version
+
 # OR run a test `elt` pipeline:
-meltano elt tap-pushbullet target-jsonl
+meltano run tap-pushbullet target-jsonl
 ```
 
 ### SDK Dev Guide
