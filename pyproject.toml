@@ -89,7 +89,6 @@ filterwarnings = [
 xfail_strict = true
 
 [tool.mypy]
-python_version = "3.12"
 warn_unused_configs = true
 
 [[tool.mypy.overrides]]
