@@ -30,7 +30,7 @@ classifiers = [
 dynamic = [ "version" ]
 dependencies = [
   "requests-cache>=1.1,<2",
-  "singer-sdk~=0.41.0",
+  "singer-sdk~=0.42.0",
 ]
 urls.Documentation = "https://github.com/edgarrmondragon/tap-pushbullet#readme"
 urls.Homepage = "https://github.com/edgarrmondragon/tap-pushbullet"
