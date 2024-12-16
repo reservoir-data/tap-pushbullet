@@ -84,6 +84,7 @@ addopts = "-vvv"
 filterwarnings = [
   "error",
   """default:Fields in transformed catalog but not in records:UserWarning""",
+  "default:Use `http_method` instead:singer_sdk.helpers._compat.SingerSDKDeprecationWarning",
 ]
 xfail_strict = true
 
