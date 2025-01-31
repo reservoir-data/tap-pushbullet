@@ -37,6 +37,14 @@ urls.Homepage = "https://github.com/edgarrmondragon/tap-pushbullet"
 urls.Repository = "https://github.com/edgarrmondragon/tap-pushbullet"
 scripts."tap-pushbullet" = "tap_pushbullet.tap:TapPushbullet.cli"
 
+[dependency-groups]
+dev = [
+  "mypy>=1.11.2",
+  "pytest-github-actions-annotate-failures>=0.2",
+  "singer-sdk[testing]",
+  "types-requests>=2.31.0.6",
+]
+
 [tool.hatch.version]
 source = "vcs"
 
@@ -97,9 +105,4 @@ module = [
 ]
 
 [tool.uv]
-dev-dependencies = [
-  "singer-sdk[testing]",
-  "pytest-github-actions-annotate-failures>=0.2.0",
-  "mypy>=1.11.2",
-  "types-requests>=2.31.0.6",
-]
+required-version = ">=0.5.19"
