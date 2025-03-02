@@ -29,6 +29,8 @@ classifiers = [
 ]
 dynamic = [ "version" ]
 dependencies = [
+  "backoff~=2.2.1",
+  "requests~=2.32.3",
   "requests-cache>=1.1,<2",
   "singer-sdk~=0.44.2",
 ]
@@ -39,9 +41,16 @@ scripts."tap-pushbullet" = "tap_pushbullet.tap:TapPushbullet.cli"
 
 [dependency-groups]
 dev = [
-  "mypy>=1.11.2",
+  { include-group = "testing" },
+  { include-group = "typing" },
+]
+testing = [
+  "deptry>=0.12",
   "pytest-github-actions-annotate-failures>=0.2",
   "singer-sdk[testing]",
+]
+typing = [
+  "mypy>=1.11.2",
   "types-requests>=2.31.0.6",
 ]
 
@@ -83,6 +92,10 @@ lint.isort.known-first-party = [
 lint.mccabe.max-complexity = 5
 lint.pydocstyle.convention = "google"
 
+[tool.deptry.package_module_name_map]
+mypy = "mypy"
+types-requests = "requests"
+
 [tool.pyproject-fmt]
 max_supported_python = "3.13"
 
@@ -90,8 +103,8 @@ max_supported_python = "3.13"
 addopts = "-vvv"
 filterwarnings = [
   "error",
+  "default:'asyncio.iscoroutinefunction' is deprecated:DeprecationWarning",
   """default:Fields in transformed catalog but not in records:UserWarning""",
-  "default:Use `http_method` instead:singer_sdk.helpers._compat.SingerSDKDeprecationWarning",
 ]
 xfail_strict = true
 

@@ -2,18 +2,10 @@
 
 from __future__ import annotations
 
-import typing as t
-
 from singer_sdk import Stream, Tap
 from singer_sdk import typing as th
 
-from tap_pushbullet.streams import Chats, Devices, Pushes, Subscriptions
-
-if t.TYPE_CHECKING:
-    from singer_sdk.streams import RESTStream
-
-
-STREAM_TYPES: list[type[RESTStream]] = [Chats, Devices, Pushes, Subscriptions]
+from tap_pushbullet import streams
 
 
 class TapPushbullet(Tap):
@@ -41,4 +33,9 @@ class TapPushbullet(Tap):
         Returns:
             A list of Pushbullet streams.
         """
-        return [stream_class(tap=self) for stream_class in STREAM_TYPES]
+        return [
+            streams.Chats(tap=self),
+            streams.Devices(tap=self),
+            streams.Pushes(tap=self),
+            streams.Subscriptions(tap=self),
+        ]

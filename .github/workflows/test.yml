@@ -6,52 +6,63 @@ on:
     paths:
     - tap_pushbullet/**
     - tests/**
-    - noxfile.py
     - pyproject.toml
+    - tox.ini
     - uv.lock
     - .github/workflows/test.yml
-    - .github/workflows/constraints.txt
   pull_request:
     types: [opened, synchronize, reopened]
     paths:
     - tap_pushbullet/**
     - tests/**
-    - noxfile.py
     - pyproject.toml
+    - tox.ini
     - uv.lock
     - .github/workflows/test.yml
-    - .github/workflows/constraints.txt
 
 env:
   FORCE_COLOR: "1"
+  # renovate: datasource=pypi depName=uv
+  UV_VERSION: 0.6.3
+  # renovate: datasource=pypi depName=tox
+  TOX_VERSION: 4.24.1
+  # renovate: datasource=pypi depName=tox-uv
+  TOX_UV_VERSION: 1.25.0
 
 jobs:
   tests:
     runs-on: ubuntu-latest
-    env:
-      NOXSESSION: ${{ matrix.session }}-${{ matrix.python-version }}
     strategy:
+      fail-fast: false
+      max-parallel: 2
       matrix:
+        python-version:
+        - "3.9"
+        - "3.10"
+        - "3.11"
+        - "3.12"
+        - "3.13"
+        - "3.14"
         include:
-        - {python-version: "3.13", session: "tests"}
-        - {python-version: "3.12", session: "tests"}
-        - {python-version: "3.11", session: "tests"}
-        - {python-version: "3.10", session: "tests"}
-        - {python-version: "3.9",  session: "tests"}
+        - { environment: "dependencies", python-version: "3.x" }
+        - { environment: "typing",       python-version: "3.x" }
 
     steps:
     - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
     - uses: actions/setup-python@42375524e23c412d93fb67b49958b491fce71c38 # v5.4.0
+      id: setup-python
       with:
         python-version: ${{ matrix.python-version }}
         allow-prereleases: true
-    - uses: hynek/setup-cached-uv@757bedc3f972eb7227a1aa657651f15a8527c817 # v2.3.0
-    - run: |
-        uv tool install nox
-        nox --version
-
-    - name: Run Nox
+    - uses: astral-sh/setup-uv@f94ec6bedd8674c4426838e6b50417d36b6ab231 # v5.3.1
+      with:
+        version: ${{ env.UV_VERSION }}
+    - name: Run
       env:
+        UV_PYTHON: ${{ steps.setup-python.outputs.python-path }}
         TAP_PUSHBULLET_API_KEY: ${{ secrets.TAP_PUSHBULLET_API_KEY }}
-      run: |
-        nox --verbose
+      run: >
+        uvx
+        --with tox-uv==${{ env.TOX_UV_VERSION }}
+        --with tox==${{ env.TOX_VERSION }}
+        tox -e ${{ matrix.environment || matrix.python-version }}
