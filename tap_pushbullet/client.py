@@ -70,7 +70,7 @@ class PushbulletPaginator(JSONPathPaginator):
         return True
 
 
-class PushbulletStream(RESTStream):
+class PushbulletStream(RESTStream[str]):
     """Pushbullet stream class."""
 
     url_base = "https://api.pushbullet.com"
@@ -95,7 +95,7 @@ class PushbulletStream(RESTStream):
         )
 
     @property
-    def http_headers(self) -> dict:
+    def http_headers(self) -> dict[str, str]:
         """Return the http headers needed.
 
         Returns:
@@ -117,7 +117,7 @@ class PushbulletStream(RESTStream):
         Returns:
             Mapping of URL query parameters.
         """
-        params: dict = {
+        params: dict[str, t.Any] = {
             "cursor": next_page_token,
             "limit": self.PAGE_SIZE,
             "modified_after": self.get_starting_replication_key_value(context),

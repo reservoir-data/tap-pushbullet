@@ -13,66 +13,43 @@ if t.TYPE_CHECKING:
 
 __all__ = ["Chats", "Devices", "Pushes", "Subscriptions"]
 
-W = t.TypeVar("W", bound=th.JSONTypeHelper)
 
-
-class Property(th.Property):
-    """Property type class for tap-pushbullet."""
-
-    def __init__(
-        self,
-        *args: t.Any,
-        example: t.Any | None = None,  # noqa: ANN401
-        **kwargs: t.Any,
-    ) -> None:
-        """Initialize Property object.
-
-        Args:
-            *args: Positional arguments passed to super().
-            example: Example value in the JSON Schema.
-            **kwargs: Additional keyword arguments passed to super().
-        """
-        examples = kwargs.pop("examples", None)
-        kwargs["examples"] = examples or ([example] if example else None)
-        super().__init__(*args, **kwargs)
-
-
-IDEN_FIELD = Property(
+IDEN_FIELD = th.Property(
     "iden",
     th.StringType,
     description="Unique identifier for this object",
-    example="ujpah72o0sjAoRtnM0jc",
+    examples=["ujpah72o0sjAoRtnM0jc"],
 )
 
-CREATED_FIELD = Property(
+CREATED_FIELD = th.Property(
     "created",
     th.NumberType,
     description=(
         "Creation time in floating point seconds "
         "([unix timestamp](https://en.wikipedia.org/wiki/Unix_time))"
     ),
-    example="1381092887.398433",
+    examples=[1381092887.398433],
 )
 
-MODIFIED_FIELD = Property(
+MODIFIED_FIELD = th.Property(
     "modified",
     th.NumberType,
     description=(
         "Last modified time in floating point seconds "
         "([unix timestamp](https://en.wikipedia.org/wiki/Unix_time))"
     ),
-    example="1441054560.741007",
+    examples=[1441054560.741007],
 )
 
-ACTIVE_FIELD = Property(
+ACTIVE_FIELD = th.Property(
     "active",
     th.BooleanType,
     description="`false` if the item has been deleted",
-    example=False,
+    examples=[False],
 )
 
 
-class EmailField(Property):
+class EmailField(th.Property[str]):
     """Email address field."""
 
     DESCRIPTION = "Email address of the person"
@@ -97,7 +74,7 @@ class EmailField(Property):
             required=required,
             default=default,
             description=self.DESCRIPTION,
-            example="carmack@idsoftware.com",
+            examples=["john@example.com"],
         )
 
 
@@ -120,40 +97,40 @@ class Chats(PushbulletStream):
         ACTIVE_FIELD,
         CREATED_FIELD,
         MODIFIED_FIELD,
-        Property(
+        th.Property(
             "muted",
             th.BooleanType,
             description="If `true`, notifications from this chat will not be shown",
         ),
-        Property(
+        th.Property(
             "with",
             th.ObjectType(
                 EmailField("email"),
                 NormalizedEmailField("email_normalized"),
-                Property(
+                th.Property(
                     "iden",
                     th.StringType,
                     description="If this is a user, the iden of that user",
-                    example="ujlMns72k",
+                    examples=["ujlMns72k"],
                 ),
-                Property(
+                th.Property(
                     "image_url",
                     th.StringType,
                     description="Image to display for the person",
-                    example="https://dl.pushbulletusercontent.com/abc/john.jpg",
+                    examples=["https://dl.pushbulletusercontent.com/abc/john.jpg"],
                 ),
-                Property(
+                th.Property(
                     "type",
                     th.StringType,
                     description='`"email"` or `"user"`',
-                    example="user",
+                    examples=["user"],
                     allowed_values=["email", "user"],
                 ),
-                Property(
+                th.Property(
                     "name",
                     th.StringType,
                     description="Name of the person",
-                    example="John Carmack",
+                    examples=["John Carmack"],
                 ),
             ),
             description="The user or email that the chat is with",
@@ -174,7 +151,7 @@ class Devices(PushbulletStream):
         ACTIVE_FIELD,
         CREATED_FIELD,
         MODIFIED_FIELD,
-        Property(
+        th.Property(
             "icon",
             th.StringType,
             description=(
@@ -184,13 +161,13 @@ class Devices(PushbulletStream):
             ),
             examples=["ios"],
         ),
-        Property(
+        th.Property(
             "nickname",
             th.StringType,
             description="Name to use when displaying the device",
-            example="Elon Musk's iPhone",
+            examples=["John's iPhone"],
         ),
-        Property(
+        th.Property(
             "generated_nickname",
             th.BooleanType,
             description=(
@@ -198,34 +175,34 @@ class Devices(PushbulletStream):
                 "`manufacturer` and `model` fields (only used for some android phones)"
             ),
         ),
-        Property(
+        th.Property(
             "manufacturer",
             th.StringType,
             description="Manufacturer of the device",
-            example="Apple",
+            examples=["Apple"],
         ),
-        Property(
+        th.Property(
             "model",
             th.StringType,
             description="Model of the device",
-            example="iPhone 5s (GSM(",
+            examples=["iPhone 5s (GSM)"],
         ),
-        Property(
+        th.Property(
             "app_version",
             th.IntegerType,
             description="Version of the Pushbullet application installed on the device",
-            example=8623,
+            examples=[8623],
         ),
-        Property(
+        th.Property(
             "fingerprint",
             th.StringType,
             description=(
                 "String fingerprint for the device, used by apps to avoid duplicate "
                 "devices. Value is platform-specific."
             ),
-            example="nLN19IRNzS5xidPF+X8mKGNRpQo2X6XBgyO30FL6OiQ=",
+            examples=["nLN19IRNzS5xidPF+X8mKGNRpQo2X6XBgyO30FL6OiQ="],
         ),
-        Property(
+        th.Property(
             "key_fingerprint",
             th.StringType,
             description=(
@@ -233,9 +210,11 @@ class Devices(PushbulletStream):
                 "determine which devices the current device (based on its own key "
                 "fingerprint) will be able to talk to."
             ),
-            example="5ae6ec7e1fe681861b0cc85c53accc13bf94c11db7461a2808903f7469bfda56",
+            examples=[
+                "5ae6ec7e1fe681861b0cc85c53accc13bf94c11db7461a2808903f7469bfda56"
+            ],
         ),
-        Property(
+        th.Property(
             "push_token",
             th.StringType,
             description=(
@@ -244,16 +223,16 @@ class Devices(PushbulletStream):
                 "[Realtime Event Stream]"
                 "(https://docs.pushbullet.com/#realtime-event-stream)."
             ),
-            example="production:f73be0ee7877c8c7fa69b1468cde764f",
+            examples=["production:f73be0ee7877c8c7fa69b1468cde764f"],
         ),
-        Property(
+        th.Property(
             "has_sms",
             th.BooleanType,
             description=(
                 "`true` if the devices has SMS capability, currently only true for "
                 '`type="android"` devices'
             ),
-            example=True,
+            examples=[True],
         ),
     ).to_dict()
 
@@ -271,19 +250,19 @@ class Pushes(PushbulletStream):
         ACTIVE_FIELD,
         CREATED_FIELD,
         MODIFIED_FIELD,
-        Property(
+        th.Property(
             "type",
             th.StringType,
             description='Type of the push, one of `"note"`, `"file"`, `"link"`.',
-            example="note",
+            examples=["note"],
             allowed_values=["note", "file", "link"],
         ),
-        Property(
+        th.Property(
             "dismissed",
             th.BooleanType,
             description="Whether the push has been dismissed",
         ),
-        Property(
+        th.Property(
             "guid",
             th.StringType,
             description=(
@@ -294,72 +273,72 @@ class Pushes(PushbulletStream):
                 "same guid is unlikely to create another push (it will return the "
                 "previously created push)."
             ),
-            example="993aaa48567d91068e96c75a74644159",
+            examples=["993aaa48567d91068e96c75a74644159"],
         ),
-        Property(
+        th.Property(
             "direction",
             th.StringType,
             description=(
                 'Direction the push was sent in, can be `"self"`, `"outgoing"`, or '
                 '`"incoming"`'
             ),
-            example="self",
+            examples=["self"],
             allowed_values=["self", "outgoing", "incoming"],
         ),
-        Property(
+        th.Property(
             "sender_iden",
             th.StringType,
             description="The push's sender's ID",
         ),
         EmailField("sender_email"),
         NormalizedEmailField("sender_email_normalized"),
-        Property(
+        th.Property(
             "sender_name",
             th.StringType,
             description="Name of the sender",
-            example="Elon Musk",
+            examples=["Santa Claus"],
         ),
-        Property(
+        th.Property(
             "receiver_iden",
             th.StringType,
             description="The push's receiver's ID",
         ),
         EmailField("receiver_email"),
         NormalizedEmailField("receiver_email_normalized"),
-        Property(
+        th.Property(
             "target_device_iden",
             th.StringType,
             description=(
                 "Device iden of the target device, if sending to a single device"
             ),
-            example="ujpah72o0sjAoRtnM0jc",
+            examples=["ujpah72o0sjAoRtnM0jc"],
         ),
-        Property(
+        th.Property(
             "source_device_iden",
             th.StringType,
             description=(
                 "Device iden of the sending device. Optionally set by the sender when "
                 "creating a push"
             ),
-            example="ujpah72o0sjAoRtnM0jc",
+            examples=["ujpah72o0sjAoRtnM0jc"],
         ),
-        Property(
+        th.Property(
             "client_iden",
             th.StringType,
             description=(
                 "If the push was created by a client, set to the iden of that client."
             ),
-            example="ujpah72o0sjAoRtnM0jc",
+            examples=["ujpah72o0sjAoRtnM0jc"],
         ),
-        Property(
+        th.Property(
             "channel_iden",
             th.StringType,
             description=(
                 "If the push was created by a channel, set to the iden of that channel"
             ),
-            example="ujpah72o0sjAoRtnM0jc",
+            examples=["ujpah72o0sjAoRtnM0jc"],
         ),
-        Property(
+        th.Property(
             "awake_app_guids",
             th.ArrayType(th.StringType),
             description=(
@@ -368,64 +347,64 @@ class Pushes(PushbulletStream):
                 "of this list is > 0, `dismissed` will be set to `true` and the awake "
                 "app(s) must decide what to do with the notification"
             ),
-            example=["web-2d8cdf2a2b9b", "web-cdb2313c74e"],
+            examples=[["web-2d8cdf2a2b9b", "web-cdb2313c74e"]],
         ),
-        Property(
+        th.Property(
             "title",
             th.StringType,
             description="Title of the push, used for all types of pushes",
-            example="Space Travel Ideas",
+            examples=["Save the Axolotl"],
         ),
-        Property(
+        th.Property(
             "body",
             th.StringType,
             description="Body of the push, used for all types of pushes",
-            example="Space Elevator, Mars Hyperloop, Space Model S (Model Space?)",
+            examples=["Nature", "Conservation"],
         ),
-        Property(
+        th.Property(
             "url",
             th.StringType,
             description='URL field, used for `type="link"` pushes',
-            example="https://www.teslamotors.com/",
+            examples=["https://www.santuarioajolote.com/"],
         ),
-        Property(
+        th.Property(
             "file_name",
             th.StringType,
             description='File name, used for `type="file"` pushes',
-            example="john.jpg",
+            examples=["john.jpg"],
         ),
-        Property(
+        th.Property(
             "file_type",
             th.StringType,
             description='File mime type, used for `type="file"` pushes',
-            example="image/jpeg",
+            examples=["image/jpeg"],
         ),
-        Property(
+        th.Property(
             "file_url",
             th.StringType,
             description='File download url, used for `type="file"` pushes',
-            example="https://dl.pushbulletusercontent.com/abc/john.jpg",
+            examples=["https://dl.pushbulletusercontent.com/abc/john.jpg"],
         ),
-        Property(
+        th.Property(
             "image_url",
             th.StringType,
             description=(
                 'URL to an image to use for this push, present on `type="file"` pushes '
                 "if file_type matches image/*"
             ),
-            example="https://lh3.googleusercontent.com/abc",
+            examples=["https://lh3.googleusercontent.com/abc"],
         ),
-        Property(
+        th.Property(
             "image_width",
             th.IntegerType,
             description="Width of image in pixels, only present if `image_url` is set",
-            example=322,
+            examples=[322],
         ),
-        Property(
+        th.Property(
             "image_height",
             th.IntegerType,
             description="Height of image in pixels, only present if `image_url` is set",
-            example=484,
+            examples=[484],
         ),
     ).to_dict()
 
@@ -461,51 +440,51 @@ class Subscriptions(PushbulletStream):
         ACTIVE_FIELD,
         CREATED_FIELD,
         MODIFIED_FIELD,
-        Property(
+        th.Property(
             "muted",
             th.BooleanType,
             description=(
                 "If `true`, notifications from this subscription will not be shown"
             ),
         ),
-        Property(
+        th.Property(
             "channel",
             th.ObjectType(
-                Property(
+                th.Property(
                     "iden",
                     th.StringType,
                     description="Unique identifier for the channel",
-                    example="ujpah72o0sjAoRtnM0jc",
+                    examples=["ujpah72o0sjAoRtnM0jc"],
                 ),
-                Property(
+                th.Property(
                     "tag",
                     th.StringType,
                     description="Unique tag for this channel",
-                    example="elonmusknews",
+                    examples=["conservation"],
                 ),
-                Property(
+                th.Property(
                     "name",
                     th.StringType,
                     description="Name of the channel",
-                    example="Elon Musk News",
+                    examples=["Save the Axolotl"],
                 ),
-                Property(
+                th.Property(
                     "description",
                     th.StringType,
                     description="Description of the channel",
-                    example="News about Elon Musk",
+                    examples=["Legal suite for the conservation of the axolotl"],
                 ),
-                Property(
+                th.Property(
                     "image_url",
                     th.StringType,
                     description="Image for the channel",
-                    example="https://dl.pushbulletusercontent.com/abc/musk.jpg",
+                    examples=["https://dl.pushbulletusercontent.com/abc/axolotl.jpg"],
                 ),
-                Property(
+                th.Property(
                     "website_url",
                     th.StringType,
                     description="Link to a website for the channel",
-                    example="https://twitter.com/elonmusk",
+                    examples=["https://www.santuarioajolote.com"],
                 ),
             ),
             description="Information about the channel that is being subscribed to",
