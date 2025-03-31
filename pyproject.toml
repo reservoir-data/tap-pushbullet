@@ -32,7 +32,7 @@ dependencies = [
   "backoff~=2.2.1",
   "requests~=2.32.3",
   "requests-cache>=1.1,<2",
-  "singer-sdk~=0.44.2",
+  "singer-sdk~=0.45.3",
 ]
 urls.Documentation = "https://github.com/edgarrmondragon/tap-pushbullet#readme"
 urls.Homepage = "https://github.com/edgarrmondragon/tap-pushbullet"
@@ -105,6 +105,9 @@ filterwarnings = [
   "error",
   "default:'asyncio.iscoroutinefunction' is deprecated:DeprecationWarning",
   """default:Fields in transformed catalog but not in records:UserWarning""",
+  # https://github.com/python-attrs/cattrs/issues/635
+  # https://github.com/python/cpython/issues/105499
+  "default:'_UnionGenericAlias' is deprecated and slated for removal in Python 3.17:DeprecationWarning",
 ]
 xfail_strict = true
 

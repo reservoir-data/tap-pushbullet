@@ -19,7 +19,6 @@ NO_RECORDS = {
     "test_tap_stream_attribute_is_boolean[[]chats.*[]]",
     "test_tap_stream_attribute_is_numeric[[]chats.*[]]",
     "test_tap_stream_attribute_is_object[[]chats.*[]]",
-    "test_tap_stream_attribute_is_boolean[[]subscriptions.muted[]]",
 }
 
 
