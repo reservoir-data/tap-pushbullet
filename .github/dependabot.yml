@@ -10,8 +10,6 @@ updates:
     schedule:
       interval: weekly
       timezone: "America/Mexico_City"
-    reviewers:
-      - "edgarrmondragon"
     versioning-strategy: increase-if-necessary
     commit-message:
       prefix: "feat(deps): "
@@ -28,8 +26,6 @@ updates:
     schedule:
       interval: monthly
       timezone: "America/Mexico_City"
-    reviewers:
-      - "edgarrmondragon"
     commit-message:
       prefix: "ci: "
     groups:
