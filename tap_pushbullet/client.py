@@ -87,12 +87,7 @@ class PushbulletStream(RESTStream[str]):
             The authenticator instance for this REST stream.
         """
         api_key: str = self.config["api_key"]
-        return APIKeyAuthenticator.create_for_stream(
-            self,
-            key="Access-Token",
-            value=api_key,
-            location="header",
-        )
+        return APIKeyAuthenticator(key="Access-Token", value=api_key, location="header")
 
     @property
     def http_headers(self) -> dict[str, str]:
