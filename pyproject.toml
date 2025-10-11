@@ -31,7 +31,7 @@ dynamic = [ "version" ]
 dependencies = [
   "backoff~=2.2.1",
   "requests-cache>=1.1,<2",
-  "singer-sdk~=0.49.1",
+  "singer-sdk~=0.50.2",
 ]
 urls.Documentation = "https://github.com/reservoir-data/tap-pushbullet#readme"
 urls.Homepage = "https://github.com/reservoir-data/tap-pushbullet"
