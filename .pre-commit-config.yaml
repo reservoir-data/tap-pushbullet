@@ -26,7 +26,7 @@ repos:
   - id: check-renovate
     language: python
     additional_dependencies:
-    - pyjson5==1.6.9
+    - pyjson5==2.0.0
 
 - repo: https://github.com/tox-dev/pyproject-fmt
   rev: "v2.7.0"
