@@ -3,7 +3,7 @@
 from __future__ import annotations
 
 import typing as t
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 
 import backoff
 from requests_cache import install_cache
@@ -26,7 +26,7 @@ def _get_wait_time_from_response(exception: RetriableAPIError) -> float:
 
     reset = exception.response.headers.get("X-Ratelimit-Reset")
     if reset:
-        wait_time = float(reset) - datetime.now(tz=timezone.utc).timestamp()
+        wait_time = float(reset) - datetime.now(tz=UTC).timestamp()
         return max(wait_time, 0)
 
     return 0
