@@ -48,11 +48,15 @@ testing = [
 ]
 typing = [
   "mypy>=1.11.2",
+  "ty>=0.0.1a26",
   "types-requests>=2.31.0.6",
 ]
 
 [tool.hatch.version]
 source = "vcs"
+
+[tool.uv]
+required-version = ">=0.9"
 
 [tool.ruff]
 line-length = 88
@@ -136,10 +140,10 @@ commands = [ [ "deptry", "." ] ]
 
 [tool.tox.env.typing]
 dependency_groups = [ "testing", "typing" ]
-commands = [ [ "mypy", "--strict", { replace = "posargs", default = [ "tap_pushbullet", "tests" ], extend = true } ] ]
+commands = [
+  [ "mypy", "--strict", { replace = "posargs", default = [ "tap_pushbullet", "tests" ], extend = true } ],
+  [ "ty", "check", { replace = "posargs", default = [ "tap_pushbullet", "tests" ], extend = true } ],
+]
 
 [tool.mypy]
 warn_unused_configs = true
-
-[tool.uv]
-required-version = ">=0.5.19"
