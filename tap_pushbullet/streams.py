@@ -340,7 +340,7 @@ class Pushes(PushbulletStream):
         ),
         th.Property(
             "awake_app_guids",
-            th.ArrayType(th.StringType),
+            th.ArrayType(th.StringType),  # ty: ignore[invalid-argument-type]
             description=(
                 "List of `guids` (client side identifiers, not the `guid` field on "
                 "pushes) for awake apps at the time the push was sent. If the length "
