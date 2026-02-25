@@ -15,9 +15,6 @@ keywords = [
   "singer.io",
 ]
 license = "Apache-2.0"
-authors = [
-  { name = "Edgar Ramírez-Mondragón", email = "edgarrm358@gmail.com" },
-]
 requires-python = ">=3.12"
 classifiers = [
   "Programming Language :: Python :: 3 :: Only",
@@ -31,10 +28,15 @@ dependencies = [
   "requests-cache>=1.1,<2",
   "singer-sdk~=0.53.2",
 ]
-urls.Documentation = "https://github.com/reservoir-data/tap-pushbullet#readme"
-urls.Homepage = "https://github.com/reservoir-data/tap-pushbullet"
-urls.Repository = "https://github.com/reservoir-data/tap-pushbullet"
-scripts."tap-pushbullet" = "tap_pushbullet.tap:TapPushbullet.cli"
+[[project.authors]]
+name = "Edgar Ramírez-Mondragón"
+email = "edgarrm358@gmail.com"
+[project.scripts]
+"tap-pushbullet" = "tap_pushbullet.tap:TapPushbullet.cli"
+[project.urls]
+Documentation = "https://github.com/reservoir-data/tap-pushbullet#readme"
+Homepage = "https://github.com/reservoir-data/tap-pushbullet"
+Repository = "https://github.com/reservoir-data/tap-pushbullet"
 
 [dependency-groups]
 dev = [
@@ -47,65 +49,73 @@ testing = [
   "singer-sdk[testing]",
 ]
 typing = [
-  "mypy>=1.11.2",
-  "ty>=0.0.1a26",
+  "mypy>=1.19.1",
+  "ty>=0.0.18",
   "types-requests>=2.31.0.6",
 ]
 
+[tool.hatch]
 [tool.hatch.version]
 source = "vcs"
 
 [tool.uv]
 required-version = ">=0.9"
+[tool.uv.sources]
+singer-sdk = { git = "https://github.com/meltano/sdk.git", rev = "main" }
 
 [tool.ruff]
-line-length = 88
+line-length = 100
 src = [
   "tap_pushbullet",
   "tests",
 ]
-lint.select = [
+[tool.ruff.lint]
+select = [
   "ALL",
 ]
-lint.ignore = [
+ignore = [
   "COM812", # missing-trailing-comma
   "DJ",     # flake8-django
   "ISC001", # single-line-implicit-string-concatenation
   "PD",     # pandas-vet
 ]
-lint.per-file-ignores."src/*" = [
+per-file-ignores."src/*" = [
   "PD",
 ]
-lint.per-file-ignores."tests/*" = [
+per-file-ignores."tests/*" = [
   "ANN201",
   "S101",
 ]
-lint.flake8-annotations.allow-star-arg-any = true
-lint.flake8-annotations.mypy-init-return = true
-lint.flake8-annotations.suppress-dummy-args = true
-lint.flake8-errmsg.max-string-length = 30
-lint.flake8-quotes.docstring-quotes = "double"
-lint.flake8-quotes.inline-quotes = "double"
-lint.flake8-quotes.multiline-quotes = "double"
-lint.isort.known-first-party = [
+flake8-annotations.allow-star-arg-any = true
+flake8-annotations.mypy-init-return = true
+flake8-annotations.suppress-dummy-args = true
+flake8-errmsg.max-string-length = 30
+flake8-quotes.docstring-quotes = "double"
+flake8-quotes.inline-quotes = "double"
+flake8-quotes.multiline-quotes = "double"
+isort.known-first-party = [
   "citric",
 ]
-lint.mccabe.max-complexity = 5
-lint.pydocstyle.convention = "google"
+mccabe.max-complexity = 5
+pydocstyle.convention = "google"
 
+[tool.deptry]
 [tool.deptry.package_module_name_map]
 mypy = "mypy"
+ty = "ty"
 types-requests = "requests"
 
 [tool.pyproject-fmt]
 max_supported_python = "3.14"
+table_format = "long"
 
+[tool.pytest]
 [tool.pytest.ini_options]
 addopts = "-vvv"
 filterwarnings = [
   "error",
   "default:'asyncio.iscoroutinefunction' is deprecated:DeprecationWarning",
-  """default:Fields in transformed catalog but not in records:UserWarning""",
+  "default:Fields in transformed catalog but not in records:UserWarning",
   # https://github.com/python-attrs/cattrs/issues/635
   # https://github.com/python/cpython/issues/105499
   "default:'_UnionGenericAlias' is deprecated and slated for removal in Python 3.17:DeprecationWarning",
@@ -113,12 +123,12 @@ filterwarnings = [
 xfail_strict = true
 
 [tool.tox]
-min_version = "4.22"
+min_version = "4.37"
 requires = [
   # renovate: datasource=pypi depName=tox
-  "tox~=4.22",
+  "tox>=4.37",
   # renovate: datasource=pypi depName=tox-uv
-  "tox-uv~=1.17",
+  "tox-uv>=1.17",
 ]
 env_list = [
   "dependencies",
@@ -127,23 +137,20 @@ env_list = [
   "3.13",
   "3.12",
 ]
+[tool.tox.env]
+dependencies.dependency_groups = [ "testing" ]
+dependencies.commands = [ [ "deptry", "." ] ]
+typing.dependency_groups = [ "testing", "typing" ]
+typing.commands = [
+  [ "mypy", "--strict", { replace = "posargs", default = [ "tap_pushbullet", "tests" ], extend = true } ],
+  [ "ty", "check", { replace = "posargs", default = [ "tap_pushbullet", "tests" ], extend = true } ],
+]
 
 [tool.tox.env_run_base]
 runner = "uv-venv-lock-runner"
 pass_env = [ "TAP_PUSHBULLET_*" ]
 dependency_groups = [ "testing" ]
 commands = [ [ "pytest", { replace = "posargs", default = [ "tests" ], extend = true } ] ]
-
-[tool.tox.env.dependencies]
-dependency_groups = [ "testing" ]
-commands = [ [ "deptry", "." ] ]
-
-[tool.tox.env.typing]
-dependency_groups = [ "testing", "typing" ]
-commands = [
-  [ "mypy", "--strict", { replace = "posargs", default = [ "tap_pushbullet", "tests" ], extend = true } ],
-  [ "ty", "check", { replace = "posargs", default = [ "tap_pushbullet", "tests" ], extend = true } ],
-]
 
 [tool.mypy]
 warn_unused_configs = true

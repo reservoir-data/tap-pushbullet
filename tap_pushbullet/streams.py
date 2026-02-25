@@ -2,13 +2,13 @@
 
 from __future__ import annotations
 
-import typing as t
+from typing import TYPE_CHECKING, Any, override
 
 from singer_sdk import typing as th
 
 from tap_pushbullet.client import PushbulletStream
 
-if t.TYPE_CHECKING:
+if TYPE_CHECKING:
     from singer_sdk.helpers.types import Context
 
 __all__ = ["Chats", "Devices", "Pushes", "Subscriptions"]
@@ -210,9 +210,7 @@ class Devices(PushbulletStream):
                 "determine which devices the current device (based on its own key "
                 "fingerprint) will be able to talk to."
             ),
-            examples=[
-                "5ae6ec7e1fe681861b0cc85c53accc13bf94c11db7461a2808903f7469bfda56"
-            ],
+            examples=["5ae6ec7e1fe681861b0cc85c53accc13bf94c11db7461a2808903f7469bfda56"],
         ),
         th.Property(
             "push_token",
@@ -279,8 +277,7 @@ class Pushes(PushbulletStream):
             "direction",
             th.StringType,
             description=(
-                'Direction the push was sent in, can be `"self"`, `"outgoing"`, or '
-                '`"incoming"`'
+                'Direction the push was sent in, can be `"self"`, `"outgoing"`, or `"incoming"`'
             ),
             examples=["self"],
             allowed_values=["self", "outgoing", "incoming"],
@@ -308,9 +305,7 @@ class Pushes(PushbulletStream):
         th.Property(
             "target_device_iden",
             th.StringType,
-            description=(
-                "Device iden of the target device, if sending to a single device"
-            ),
+            description="Device iden of the target device, if sending to a single device",
             examples=["ujpah72o0sjAoRtnM0jc"],
         ),
         th.Property(
@@ -325,22 +320,18 @@ class Pushes(PushbulletStream):
         th.Property(
             "client_iden",
             th.StringType,
-            description=(
-                "If the push was created by a client, set to the iden of that client."
-            ),
+            description="If the push was created by a client, set to the iden of that client.",
             examples=["ujpah72o0sjAoRtnM0jc"],
         ),
         th.Property(
             "channel_iden",
             th.StringType,
-            description=(
-                "If the push was created by a channel, set to the iden of that channel"
-            ),
+            description="If the push was created by a channel, set to the iden of that channel",
             examples=["ujpah72o0sjAoRtnM0jc"],
         ),
         th.Property(
             "awake_app_guids",
-            th.ArrayType(th.StringType),  # ty: ignore[invalid-argument-type]
+            th.ArrayType(th.StringType),
             description=(
                 "List of `guids` (client side identifiers, not the `guid` field on "
                 "pushes) for awake apps at the time the push was sent. If the length "
@@ -408,11 +399,12 @@ class Pushes(PushbulletStream):
         ),
     ).to_dict()
 
+    @override
     def get_url_params(
         self,
         context: Context | None,
         next_page_token: str | None,
-    ) -> dict[str, t.Any]:
+    ) -> dict[str, Any]:
         """Return a dictionary of values to be used in URL parameterization.
 
         Args:
@@ -443,9 +435,7 @@ class Subscriptions(PushbulletStream):
         th.Property(
             "muted",
             th.BooleanType,
-            description=(
-                "If `true`, notifications from this subscription will not be shown"
-            ),
+            description="If `true`, notifications from this subscription will not be shown",
         ),
         th.Property(
             "channel",
