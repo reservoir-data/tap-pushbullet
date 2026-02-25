@@ -1,4 +1,7 @@
-version: 1
+requires_meltano: ">=4"
+default_environment: dev
+environments:
+- name: dev
 send_anonymous_usage_stats: false
 project_id: tap-pushbullet
 plugins:
@@ -14,17 +17,18 @@ plugins:
     - state
     - catalog
     - discover
+    - structured-logging
     settings:
     - name: api_key
       kind: password
       label: API Key
       description: API Key for Pushbullet
     - name: start_date
-      kind: integer
+      kind: date_iso8601
       label: Start Date
       description: Earliest datetime to get data from
     config:
-      start_date: 1451628000
+      start_date: 1 year ago
   loaders:
   - name: target-jsonl
     variant: andyh1203
