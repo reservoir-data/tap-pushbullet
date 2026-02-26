@@ -60,8 +60,6 @@ source = "vcs"
 
 [tool.uv]
 required-version = ">=0.9"
-[tool.uv.sources]
-singer-sdk = { git = "https://github.com/meltano/sdk.git", rev = "main" }
 
 [tool.ruff]
 line-length = 100
