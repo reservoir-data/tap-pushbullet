@@ -24,7 +24,7 @@ classifiers = [
 ]
 dynamic = [ "version" ]
 dependencies = [
-  "backoff~=2.2.1",
+  "python-backoff~=2.3",
   "requests-cache>=1.1,<2",
   "singer-sdk~=0.54.0a4",
 ]
