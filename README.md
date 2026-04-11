@@ -6,11 +6,11 @@ Built with the [Meltano Tap SDK](https://sdk.meltano.com) for Singer Taps.
 
 ## Capabilities
 
-* `catalog`
-* `state`
-* `discover`
-* `about`
-* `stream-maps`
+- `catalog`
+- `state`
+- `discover`
+- `about`
+- `stream-maps`
 
 ## Settings
 
@@ -38,8 +38,6 @@ A full list of supported settings and capabilities is available by running: `tap
 
 ### Source Authentication and Authorization
 
-
-
 ## Usage
 
 You can easily run `tap-pushbullet` by itself or in a pipeline using [Meltano](https://meltano.com/).
@@ -51,6 +49,7 @@ tap-pushbullet --version
 tap-pushbullet --help
 tap-pushbullet --config CONFIG --discover > ./catalog.json
 ```
+
 ## Developer Resources
 
 ### Initialize your Development Environment
