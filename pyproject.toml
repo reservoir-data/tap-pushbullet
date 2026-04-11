@@ -31,8 +31,11 @@ dependencies = [
 [[project.authors]]
 name = "Edgar Ramírez-Mondragón"
 email = "edgarrm358@gmail.com"
+[[project.maintainers]]
+name = "Edgar Ramírez-Mondragón"
+email = "edgarrm358@gmail.com"
 [project.scripts]
-"tap-pushbullet" = "tap_pushbullet.tap:TapPushbullet.cli"
+tap-pushbullet = "tap_pushbullet.tap:TapPushbullet.cli"
 [project.urls]
 Documentation = "https://github.com/reservoir-data/tap-pushbullet#readme"
 Homepage = "https://github.com/reservoir-data/tap-pushbullet"
@@ -54,19 +57,17 @@ typing = [
   "types-requests>=2.31.0.6",
 ]
 
-[tool.hatch]
 [tool.hatch.version]
+fallback-version = "0.1.0.dev0"
 source = "vcs"
 
 [tool.uv]
-required-version = ">=0.9"
+required-version = ">=0.10"
+prerelease = "allow"
+preview = true
 
 [tool.ruff]
 line-length = 100
-src = [
-  "tap_pushbullet",
-  "tests",
-]
 [tool.ruff.lint]
 select = [
   "ALL",
@@ -97,58 +98,73 @@ isort.known-first-party = [
 mccabe.max-complexity = 5
 pydocstyle.convention = "google"
 
-[tool.deptry]
 [tool.deptry.package_module_name_map]
 mypy = "mypy"
 ty = "ty"
 types-requests = "requests"
 
 [tool.pyproject-fmt]
-max_supported_python = "3.14"
 table_format = "long"
 
+[tool.mypy]
+enable_error_code = [
+  "ignore-without-code",
+  "redundant-expr",
+  "truthy-bool",
+]
+strict = true
+warn_redundant_casts = true
+warn_return_any = true
+warn_no_return = true
+warn_unreachable = true
+warn_unused_configs = true
+warn_unused_ignores = true
+
 [tool.pytest]
-[tool.pytest.ini_options]
-addopts = "-vvv"
+addopts = [
+  "-v",
+  "-ra",
+]
 filterwarnings = [
   "error",
   "default:'asyncio.iscoroutinefunction' is deprecated:DeprecationWarning",
   "default:Fields in transformed catalog but not in records:UserWarning",
-  # https://github.com/python-attrs/cattrs/issues/635
-  # https://github.com/python/cpython/issues/105499
-  "default:'_UnionGenericAlias' is deprecated and slated for removal in Python 3.17:DeprecationWarning",
 ]
-xfail_strict = true
+log_level = "INFO"
+minversion = "9"
+strict = true
+testpaths = [ "tests" ]
 
 [tool.tox]
-min_version = "4.37"
 requires = [
   # renovate: datasource=pypi depName=tox
-  "tox>=4.37",
+  "tox>=4.51",
   # renovate: datasource=pypi depName=tox-uv
   "tox-uv>=1.17",
 ]
 env_list = [
   "dependencies",
   "typing",
-  "3.14",
-  "3.13",
-  "3.12",
+  "test",
 ]
-[tool.tox.env]
-dependencies.dependency_groups = [ "testing" ]
-dependencies.commands = [ [ "deptry", "." ] ]
-typing.dependency_groups = [ "testing", "typing" ]
-typing.commands = [
-  [ "mypy", "--strict", { replace = "posargs", default = [ "tap_pushbullet", "tests" ], extend = true } ],
+[tool.tox.env.dependencies]
+description = "check for unused, missing and transitive dependencies"
+dependency_groups = [ "testing" ]
+labels = [ "check" ]
+commands = [ [ "deptry", "." ] ]
+[tool.tox.env.typing]
+description = "type checks with mypy and ty"
+dependency_groups = [ "testing", "typing" ]
+labels = [ "check" ]
+commands = [
+  [ "mypy", { replace = "posargs", default = [ "tap_pushbullet", "tests" ], extend = true } ],
   [ "ty", "check", { replace = "posargs", default = [ "tap_pushbullet", "tests" ], extend = true } ],
 ]
 
 [tool.tox.env_run_base]
+description = "run tests on Python {py_dot_ver}"
+labels = [ "test" ]
 runner = "uv-venv-lock-runner"
 pass_env = [ "TAP_PUSHBULLET_*" ]
 dependency_groups = [ "testing" ]
 commands = [ [ "pytest", { replace = "posargs", default = [ "tests" ], extend = true } ] ]
-
-[tool.mypy]
-warn_unused_configs = true
