@@ -76,9 +76,9 @@ jobs:
         MATRIX_PYTHON_VERSION: ${{ matrix.python-version }}
       run: >
         uvx
-        --with tox-uv==${TOX_UV_VERSION}
-        --with tox==${TOX_VERSION}
-        tox -e ${MATRIX_PYTHON_VERSION}
+        --with tox-uv=="${TOX_UV_VERSION}"
+        --with tox=="${TOX_VERSION}"
+        tox -e "${MATRIX_PYTHON_VERSION}"
 
   static:
     name: Static Analysis
@@ -94,8 +94,8 @@ jobs:
       run: >
           uv tool install
           --managed-python
-          --with tox-uv==${TOX_UV_VERSION}
-          --with tox==${TOX_VERSION}
+          --with tox-uv=="${TOX_UV_VERSION}"
+          --with tox=="${TOX_VERSION}"
           tox
     - name: Static Analysis
       run: tox -m check
