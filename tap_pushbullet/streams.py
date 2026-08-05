@@ -1,4 +1,7 @@
-"""Stream type classes for tap-pushbullet."""
+"""Stream type classes for tap-pushbullet.
+
+Copyright (c) 2026 Edgar-Ramírez Mondragón.
+"""
 
 from __future__ import annotations
 
