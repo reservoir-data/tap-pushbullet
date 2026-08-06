@@ -27,7 +27,7 @@ dynamic = [ "version" ]
 dependencies = [
   "python-backoff~=2.3",
   "requests-cache>=1.1,<2",
-  "singer-sdk~=0.54.5",
+  "singer-sdk~=0.55.0a4",
 ]
 [[project.authors]]
 name = "Edgar Ramírez-Mondragón"
