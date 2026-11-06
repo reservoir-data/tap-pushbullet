@@ -83,7 +83,7 @@ class PushbulletStream(RESTStream[str]):
         }
 
     @override
-    def backoff_wait_generator(self) -> Generator[float, None, None]:
+    def backoff_wait_generator(self) -> Generator[float]:
         """Get a backoff wait generator.
 
         Returns:
